@@ -23,9 +23,13 @@ app.use('/stores', storeRoutes);
 app.use('/ratings', ratingRoutes);
 
 // Database Connection
-sequelize.sync({ force: false }) // Set to 'true' only for development
+sequelize.authenticate()
     .then(() => console.log('Database connected'))
     .catch(err => console.error('Database connection error:', err));
+
+sequelize.sync({ alter: true }) // Auto-migrate models without data loss
+    .then(() => console.log('Database synchronized'))
+    .catch(err => console.error('Database synchronization error:', err));
 
 // Server
 const PORT = process.env.PORT || 5000;

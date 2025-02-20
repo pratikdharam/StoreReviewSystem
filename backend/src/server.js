@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import storeRoutes from './routes/storeRoutes.js';
 import ratingRoutes from './routes/ratingRoutes.js';
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use("/admin", adminRoutes);
 app.use('/users', userRoutes);
 app.use('/stores', storeRoutes);
 app.use('/ratings', ratingRoutes);

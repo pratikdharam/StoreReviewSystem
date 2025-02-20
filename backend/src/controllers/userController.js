@@ -1,4 +1,6 @@
 import User from "../models/User.js";
+import Store from "../models/Store.js";
+import Rating from "../models/Rating.js";
 import { Op } from "sequelize";
 
 // Get All Users with Sorting & Filtering (Admin Only)
@@ -22,5 +24,18 @@ export const getAllUsers = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: "Error fetching users", error: error.message });
+  }
+};
+
+// Admin Dashboard Stats
+export const getDashboardStats = async (req, res) => {
+  try {
+    const totalUsers = await User.count();
+    const totalStores = await Store.count();
+    const totalRatings = await Rating.count();
+
+    res.status(200).json({ totalUsers, totalStores, totalRatings });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching dashboard data", error: error.message });
   }
 };

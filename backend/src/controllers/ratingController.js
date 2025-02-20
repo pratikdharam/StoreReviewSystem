@@ -1,5 +1,7 @@
 import Rating from "../models/Rating.js";
 
+
+
 // Submit Rating
 export const submitRating = async (req, res) => {
   try {
@@ -39,5 +41,24 @@ export const updateRating = async (req, res) => {
     res.status(200).json({ message: "Rating updated successfully", rating: existingRating });
   } catch (error) {
     res.status(500).json({ message: "Error updating rating", error: error.message });
+  }
+};
+
+
+// Get Ratings for a Store (Store Owner Only)
+export const getStoreRatings = async (req, res) => {
+  try {
+    const { storeId } = req.query;
+    if (!storeId) return res.status(400).json({ message: "Store ID is required" });
+
+    const ratings = await Rating.findAll({
+      where: { storeId },
+      include: [{ model: User, attributes: ["name", "email"] }],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json(ratings);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching ratings", error: error.message });
   }
 };

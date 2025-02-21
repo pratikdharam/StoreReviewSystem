@@ -1,8 +1,14 @@
-// backend/server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
+
+// Import models in the correct order
+import User from './models/User.js';
+import Store from './models/Store.js';
+import Rating from './models/Rating.js';
+
+// Import routes
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -24,14 +30,21 @@ app.use('/users', userRoutes);
 app.use('/stores', storeRoutes);
 app.use('/ratings', ratingRoutes);
 
-// Database Connection
-sequelize.authenticate()
-    .then(() => console.log('Database connected'))
-    .catch(err => console.error('Database connection error:', err));
+// Database Connection and Sync
+const initializeDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connected');
 
-sequelize.sync({ alter: true }) // Auto-migrate models without data loss
-    .then(() => console.log('Database synchronized'))
-    .catch(err => console.error('Database synchronization error:', err));
+    // Force: false means it won't drop tables
+    await sequelize.sync({ force: false, alter: true });
+    console.log('Database synchronized');
+  } catch (error) {
+    console.error('Database connection/sync error:', error);
+  }
+};
+
+initializeDatabase();
 
 // Server
 const PORT = process.env.PORT || 5000;

@@ -24,8 +24,17 @@ const Store = sequelize.define("Store", {
     type: DataTypes.STRING(400),
     allowNull: false,
   },
+  ownerId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  }
 });
 
-Store.belongsTo(User, { foreignKey: "ownerId", onDelete: "SET NULL" });
+// Define the association
+Store.belongsTo(User, { foreignKey: 'ownerId', as: 'owner' });
+// We'll define the Rating association in a separate file
 
 export default Store;

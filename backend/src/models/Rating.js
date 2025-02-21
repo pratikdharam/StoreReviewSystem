@@ -17,9 +17,27 @@ const Rating = sequelize.define("Rating", {
       max: 5,
     },
   },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  },
+  storeId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Store,
+      key: 'id'
+    }
+  }
 });
 
-Rating.belongsTo(User, { foreignKey: "userId", onDelete: "CASCADE" });
-Rating.belongsTo(Store, { foreignKey: "storeId", onDelete: "CASCADE" });
+// Define associations
+Rating.belongsTo(User, { foreignKey: 'userId' });
+Rating.belongsTo(Store, { foreignKey: 'storeId' });
+Store.hasMany(Rating, { foreignKey: 'storeId' });
 
 export default Rating;

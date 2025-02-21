@@ -1,11 +1,22 @@
 import express from "express";
-import { getAllStores, addStore } from "../controllers/storeController.js";
-import { authorizeRole, verifyToken } from "../middleware/authMiddleware.js";
+import { 
+  getAllStores, 
+  getStore, 
+  addStore, 
+  updateStore, 
+  deleteStore 
+} from "../controllers/storeController.js";
+import { verifyToken, authorizeRole } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// Public routes
 router.get("/", getAllStores);
-router.post("/", verifyToken, authorizeRole(["admin"]) , addStore);
+router.get("/:id", getStore);
 
-export default router; 
+// Admin only routes
+router.post("/", verifyToken, authorizeRole(["admin"]), addStore);
+router.put("/:id", verifyToken, authorizeRole(["admin"]), updateStore);
+router.delete("/:id", verifyToken, authorizeRole(["admin"]), deleteStore);
 
+export default router;
